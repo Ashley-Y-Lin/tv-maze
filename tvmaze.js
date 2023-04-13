@@ -120,7 +120,15 @@ async function getEpisodesOfShow(id) {
 
 /** Write a clear docstring for this function... */
 
-function displayEpisodes(episodes) {
+function displayEpisodes(episodes, title) {
+  console.log("this is the episodes ", episodes );
+
+  let episodeName = $("<li>", {
+    name: title
+  });
+
+  $("episodesList").append(episodeName);
+
   for (let episode of episodes) {
     let singleEpisode = $("<li>", {
       text: `${episode.name} (season ${episode.season}, number ${episode.number})`
@@ -132,18 +140,23 @@ function displayEpisodes(episodes) {
 
 // add other functions that will be useful / match our structure & design
 
-function getAndDisplayEpisodes(id) {
+async function getAndDisplayEpisodes(id, title) {
   console.log("id", id)
-  const episodes = getEpisodesOfShow(id);
-  displayEpisodes(episodes);
+  const episodes = await getEpisodesOfShow(id);
+  displayEpisodes(episodes, title);
 }
 
 $("#showsList").on("click", ".Show-getEpisodes", function (event) {
-  const targetShowDiv = event.target.closest(".Show");
-  console.log("target show div", targetShowDiv)
+  const $targetShowDiv = $(event.target).closest(".Show");
+  console.log("target show div", $targetShowDiv)
 
-  const targetShowID = targetShowDiv.attr("data-value")
+  const targetShowID = $targetShowDiv.attr("data-show-id")
   console.log("target show id", targetShowID)
 
-  getAndDisplayEpisodes(targetShowID);
+
+  const showName = $(event.target).closest(".text-primary").text()
+  console.log("example 1 is", $(event.target).closest(".text-primary"));
+
+  console.log("ShowName is ", showName);
+  getAndDisplayEpisodes(targetShowID, showName);
 });
